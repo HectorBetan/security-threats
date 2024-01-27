@@ -15,7 +15,7 @@ jobs:
           args: --sarif-file-output=snyk.sarif --all-projects
       - name: Paso siguiente
         run: |
-          if failure()
+          if failure(); then
             echo "El paso anterior tuvo errores."
           else
             echo "El paso anterior se ejecutó sin errores."
