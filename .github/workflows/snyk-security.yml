@@ -17,22 +17,26 @@ jobs:
         run: |
           if [ "${{ github.job }}" != "success" ]; then
             echo "Existen vulnerabilidades."
-            echo "has_vulnerabilities=true" >> "$GITHUB_ENV"
+            echo "HAS_V=true" >> "$GITHUB_OUTPUT"
           else
             echo "No existen vulnerabilidades."
-            echo "has_vulnerabilities=false" >> "$GITHUB_ENV"
+            echo "HAS_V=false" >> "$GITHUB_OUTPUT"
           fi
         id: snykcheck
 
       - name: Archive ZIP if code is secure
-        if: $has_vulnerabilities == 'false'
+        env:
+          HAS_V: ${{ steps.snykcheck.outputs.HAS_V }}
+        if: $HAS_V == 'false'
         uses: ihiroky/archive-action@v1
         with:
           root_dir: .
           file_path: secure-code.zip
           verbose: true
       - name: Handle case if code is not secure
-        if: has_vulnerabilities != 'false'
+        env:
+          HAS_V: ${{ steps.snykcheck.outputs.HAS_V }}
+        if: HAS_V != 'false'
         run: echo "El código no es seguro. No se genero el archivo ZIP."
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
