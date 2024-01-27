@@ -15,13 +15,12 @@ jobs:
           args: --sarif-file-output=snyk.sarif --all-projects
       - name: Check for vulnerabilities
         run: |
-          vulnerabilities=$(echo "${{ steps.snyk.outputs.stdout }}" | grep -c 'contained vulnerable paths')
-          if [ "$vulnerabilities" -gt 0 ]; then
-          echo "Code is vulnerable. Not uploading zip."
-          exit 1
-          else
-          echo "Code is secure. Proceeding to upload zip."
-          fi
+         if [[ "${{ steps.snyk.outputs.stdout }}" == *"contained vulnerable paths"* ]]; then
+         echo "Code is vulnerable. Not uploading zip."
+         exit 1
+         else
+         echo "Code is secure. Proceeding to upload zip."
+         fi
       - name: Archive code if secure
         if: success()
         uses: ihiroky/archive-action@v1
