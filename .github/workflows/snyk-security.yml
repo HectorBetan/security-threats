@@ -16,7 +16,6 @@ jobs:
       - name: Paso siguiente
         run: |
           if failure()
-          then
             echo "El paso anterior tuvo errores."
           else
             echo "El paso anterior se ejecutó sin errores."
