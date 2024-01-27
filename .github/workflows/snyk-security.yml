@@ -6,23 +6,18 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
+        
         continue-on-error: true # To make sure that SARIF upload gets called
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: test
-          args: --sarif-file-output=snyk.sarif --all-projects
-      - name: Check vulnerabilities for ZIP
         run: |
-          if [ "${{ github.job }}" != "success" ]; then
-            echo "Existen vulnerabilidades."
-            echo "::set-output name=has_vulnerabilities::true"
-          else
+          snyk test --sarif-file-output=snyk.sarif --all-projects
+          if [ $? -eq 0 ]; then
             echo "No existen vulnerabilidades."
             echo "::set-output name=has_vulnerabilities::false"
+            zip -r secure-code.zip .
+          else
+            echo "Existen vulnerabilidades."
+            echo "::set-output name=has_vulnerabilities::true"
           fi
-        id: snykcheck
 
       - name: Archive ZIP if code is secure
         if: steps.snykcheck.outputs.has_vulnerabilities == 'false'
