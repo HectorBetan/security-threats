@@ -24,7 +24,7 @@ jobs:
       - name: Archive code if secure
         if: success()
         uses: ihiroky/archive-action@v1
-        continue-on-error: true
+
         with:
           root_dir: .
           file_path: secure-code.zip
