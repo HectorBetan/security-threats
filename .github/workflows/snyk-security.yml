@@ -13,8 +13,7 @@ jobs:
         with:
           command: test
           args: |
-            --sarif-file-output=snyk.sarif
-            --all-projects
+            --sarif-file-output=snyk.sarif --all-projects
             --severity-threshold=high
             --fail-on-issues
             --dev
