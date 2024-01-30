@@ -19,14 +19,14 @@ jobs:
             --dev
       - name: Check vulnerabilities for ZIP
         run: |
-          if [ ${{ failure() }} == true ]; then
+          if [ "${{ env.GITHUB_JOB_STATE }}" == "failure" ]; then
             echo "Existen vulnerabilidades. No se generará el ZIP."
             echo "has_vulnerabilities=true" >> $GITHUB_ENV
           else
             echo "No existen vulnerabilidades. Se generará el ZIP."
             echo "has_vulnerabilities=false" >> $GITHUB_ENV
           fi
-          echo "Valor de github.job: ${{ failure() }}"
+          echo "Valor de github.job: ${{ env.GITHUB_JOB_STATE }}"
         id: snykcheck
 
       - name: Archive ZIP if code is secure
