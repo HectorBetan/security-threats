@@ -20,7 +20,7 @@ jobs:
             --dev
       - name: Check vulnerabilities for ZIP
         run: |
-          if [ "${{ steps.snyk.outcome }}" != "failure" ]; then
+          if [ "${{ steps.snyk.outcome }}" == "failure" ]; then
             echo "Existen vulnerabilidades. Se generará el ZIP."
             echo "has_vulnerabilities=true" >> $GITHUB_ENV
           else
