@@ -12,27 +12,30 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
-          args: --sarif-file-output=snyk.sarif 
+          args: |
+            --sarif-file-output=snyk.sarif
             --all-projects
-            --severity-threshold=high  
-            --fail-on-issues             
-            --dev                   
+            --severity-threshold=high  # Set the severity threshold as needed
+            --fail-on-issues             # Fail the build if vulnerabilities are found
+            --dev                        # Include dev dependencies
+            # Add any other Snyk CLI options as needed
       - name: Check vulnerabilities for ZIP
         run: |
-          if [ "${{ github.job }}" == "success" ]; then
-            echo "Existen vulnerabilidades. No se generará el fichero ZIP."
+          if [ "${{ github.job }}" != "success" ]; then
+            echo "Existen vulnerabilidades."
             echo "has_vulnerabilities=true" >> $GITHUB_ENV
           else
-            echo "No existen vulnerabilidades. Se generará el fichero ZIP."
+            echo "No existen vulnerabilidades."
             echo "has_vulnerabilities=false" >> $GITHUB_ENV
           fi
         id: snykcheck
 
-      - name: Archive ZIP if code is not secure
+      - name: Archive ZIP if code is secure
+        if: env.has_vulnerabilities == 'false'
         uses: ihiroky/archive-action@v1
         with:
           root_dir: .
-          file_path: security-threats.zip
+          file_path: secure-code.zip
           verbose: true
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
