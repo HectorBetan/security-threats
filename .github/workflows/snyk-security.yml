@@ -17,6 +17,7 @@ jobs:
             --severity-threshold=high
             --fail-on-issues
             --dev
+            echo "Valor de job.status: ${{ job.status }}"
       - name: Check vulnerabilities for ZIP
         run: |
           if [ "${{ env.GITHUB_JOB_STATE }}" == "failure" ]; then
