@@ -26,7 +26,7 @@ jobs:
             echo "No existen vulnerabilidades. Se generará el ZIP."
             echo "has_vulnerabilities=false" >> $GITHUB_ENV
           fi
-          echo "Valor de github.job: ${{ env.GITHUB_JOB_STATE }}"
+          echo "Valor de job.status: ${{ job.status }}"
         id: snykcheck
 
       - name: Archive ZIP if code is secure
