@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
-        continue-on-error: true # To make sure that SARIF upload gets called
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -15,17 +15,16 @@ jobs:
           args: |
             --sarif-file-output=snyk.sarif
             --all-projects
-            --severity-threshold=high  # Set the severity threshold as needed
-            --fail-on-issues             # Fail the build if vulnerabilities are found
-            --dev                        # Include dev dependencies
-            # Add any other Snyk CLI options as needed
+            --severity-threshold=high
+            --fail-on-issues
+            --dev
       - name: Check vulnerabilities for ZIP
         run: |
           if [ "${{ github.job }}" != "success" ]; then
-            echo "Existen vulnerabilidades."
+            echo "Existen vulnerabilidades. No se generará el ZIP."
             echo "has_vulnerabilities=true" >> $GITHUB_ENV
           else
-            echo "No existen vulnerabilidades."
+            echo "No existen vulnerabilidades. Se generará el ZIP."
             echo "has_vulnerabilities=false" >> $GITHUB_ENV
           fi
         id: snykcheck
