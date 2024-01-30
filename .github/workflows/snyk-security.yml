@@ -12,7 +12,11 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
-          args: --sarif-file-output=snyk.sarif --all-projects
+          args: --sarif-file-output=snyk.sarif 
+            --all-projects
+            --severity-threshold=high  
+            --fail-on-issues             
+            --dev                   
       - name: Check vulnerabilities for ZIP
         run: |
           if [ "${{ github.job }}" != "success" ]; then
