@@ -18,18 +18,15 @@ jobs:
             --severity-threshold=high
             --fail-on-issues
             --dev
-            |
-            echo "Valor de job.status: ${{ job.status }}"
       - name: Check vulnerabilities for ZIP
         run: |
-          if [ "${{ env.GITHUB_JOB_STATE }}" == "failure" ]; then
+          if [ "${{ steps.snyk.outcome }}" == "failure" ]; then
             echo "Existen vulnerabilidades. No se generará el ZIP."
             echo "has_vulnerabilities=true" >> $GITHUB_ENV
           else
             echo "No existen vulnerabilidades. Se generará el ZIP."
             echo "has_vulnerabilities=false" >> $GITHUB_ENV
           fi
-          echo "Valor de job.status: ${{ steps.snyk.outcome }}"
         id: snykcheck
       - name: Archive ZIP if code is secure
         if: env.has_vulnerabilities == 'false'
