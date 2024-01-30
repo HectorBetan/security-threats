@@ -16,10 +16,10 @@ jobs:
       - name: Check vulnerabilities for ZIP
         run: |
           if [ "${{ github.job }}" != "success" ]; then
-            echo "Existen vulnerabilidades."
+            echo "Existen vulnerabilidades, no se generará el ZIP."
             echo "::set-output name=has_vulnerabilities::true"
           else
-            echo "No existen vulnerabilidades."
+            echo "No existen vulnerabilidades, se generará el ZIP."
             echo "::set-output name=has_vulnerabilities::false"
           fi
         id: snykcheck
