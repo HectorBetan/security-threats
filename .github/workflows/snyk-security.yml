@@ -19,7 +19,7 @@ jobs:
             --dev                   
       - name: Check vulnerabilities for ZIP
         run: |
-          if [ "${{ github.job }}" != "success" ]; then
+          if [ "${{ github.job }}" == "success" ]; then
             echo "Existen vulnerabilidades. No se generará el fichero ZIP."
             echo "has_vulnerabilities=true" >> $GITHUB_ENV
           else
