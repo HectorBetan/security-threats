@@ -6,6 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
+        id: synk
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -17,6 +18,7 @@ jobs:
             --severity-threshold=high
             --fail-on-issues
             --dev
+            |
             echo "Valor de job.status: ${{ job.status }}"
       - name: Check vulnerabilities for ZIP
         run: |
@@ -27,7 +29,7 @@ jobs:
             echo "No existen vulnerabilidades. Se generará el ZIP."
             echo "has_vulnerabilities=false" >> $GITHUB_ENV
           fi
-          echo "Valor de job.status: ${{ job.status }}"
+          echo "Valor de job.status: ${{ steps.snyk.outcome }}"
         id: snykcheck
       - name: Archive ZIP if code is secure
         if: env.has_vulnerabilities == 'false'
